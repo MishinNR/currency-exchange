@@ -1,0 +1,6 @@
+### Project ###
+target/
+webapp/WEB-INF/
+
+### IntelliJ IDEA ###
+.idea/
