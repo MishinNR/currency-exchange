@@ -44,13 +44,13 @@ public class CurrenciesServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try (PrintWriter writer = resp.getWriter()) {
             try {
-                String code = req.getParameter("code");
                 String name = req.getParameter("name");
+                String code = req.getParameter("code");
                 String sign = req.getParameter("sign");
 
                 validateRequestParametersArePresent(code, name, sign);
-                validateParameterCode(code);
                 validateParameterName(name);
+                validateParameterCode(code);
                 validateParameterSign(sign);
 
                 CurrencyDTO currencyDTO = currencyService.save(new Currency(code, name, sign));

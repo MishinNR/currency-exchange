@@ -7,7 +7,7 @@ import exception.DatabaseException;
 import exception.currency.CurrencyAlreadyExistsException;
 import exception.currency.CurrencyNotFoundException;
 import org.postgresql.util.PSQLException;
-import util.CurrencyConverter;
+import util.CurrencyMapper;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -18,7 +18,7 @@ import static java.util.stream.Collectors.toList;
 public class CurrencyService {
     private static final CurrencyService INSTANCE;
     private final CurrencyDAO currencyDAO;
-    private final CurrencyConverter currencyConverter;
+    private final CurrencyMapper currencyMapper;
 
     static {
         INSTANCE = new CurrencyService();
@@ -26,13 +26,13 @@ public class CurrencyService {
 
     private CurrencyService() {
         this.currencyDAO = CurrencyDAO.getInstance();
-        this.currencyConverter = new CurrencyConverter();
+        this.currencyMapper = new CurrencyMapper();
     }
 
     public List<CurrencyDTO> findAll() throws DatabaseException {
         try {
             return currencyDAO.findAll().stream()
-                    .map(currencyConverter::convertToDTO)
+                    .map(currencyMapper::convertToDTO)
                     .collect(toList());
         } catch (SQLException e) {
             throw new DatabaseException();
@@ -45,7 +45,7 @@ public class CurrencyService {
             if (currency.isEmpty()) {
                 throw new CurrencyNotFoundException();
             }
-            return currencyConverter.convertToDTO(currency.get());
+            return currencyMapper.convertToDTO(currency.get());
         } catch (SQLException e) {
             throw new DatabaseException();
         }
@@ -53,7 +53,7 @@ public class CurrencyService {
 
     public CurrencyDTO save(Currency currency) throws DatabaseException, CurrencyAlreadyExistsException {
         try {
-            return currencyConverter.convertToDTO(currencyDAO.save(currency));
+            return currencyMapper.convertToDTO(currencyDAO.save(currency));
         } catch (PSQLException e) {
             throw new CurrencyAlreadyExistsException();
         } catch (SQLException e) {

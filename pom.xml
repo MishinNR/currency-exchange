@@ -10,6 +10,14 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+
+        <lombok.version>1.18.30</lombok.version>
+        <jakarta.servlet.version>6.0.0</jakarta.servlet.version>
+        <postgresql.version>42.6.0</postgresql.version>
+        <jackson.version>2.15.3</jackson.version>
+        <hikari.connection.pool.version>5.0.1</hikari.connection.pool.version>
+        <modelmapper.version>3.2.0</modelmapper.version>
+        <owner.versin>1.0.12</owner.versin>
     </properties>
 
     <dependencies>
@@ -18,7 +26,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.30</version>
+            <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -27,7 +35,7 @@
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
-            <version>6.0.0</version>
+            <version>${jakarta.servlet.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -36,7 +44,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.6.0</version>
+            <version>${postgresql.version}</version>
         </dependency>
 
         <!-- Jackson Databind -->
@@ -44,7 +52,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.15.3</version>
+            <version>${jackson.version}</version>
         </dependency>
 
         <!-- Hikari Connection Pool -->
@@ -52,7 +60,7 @@
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>5.0.1</version>
+            <version>${hikari.connection.pool.version}</version>
         </dependency>
 
         <!-- Model Mapper -->
@@ -60,7 +68,7 @@
         <dependency>
             <groupId>org.modelmapper</groupId>
             <artifactId>modelmapper</artifactId>
-            <version>3.2.0</version>
+            <version>${modelmapper.version}</version>
         </dependency>
 
         <!-- Owner -->
@@ -68,7 +76,7 @@
         <dependency>
             <groupId>org.aeonbits.owner</groupId>
             <artifactId>owner</artifactId>
-            <version>1.0.12</version>
+            <version>${owner.versin}</version>
         </dependency>
     </dependencies>
 

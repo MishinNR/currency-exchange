@@ -4,10 +4,10 @@ import dto.CurrencyDTO;
 import entity.Currency;
 import org.modelmapper.ModelMapper;
 
-public class CurrencyConverter {
+public class CurrencyMapper {
     private final ModelMapper modelMapper;
 
-    public CurrencyConverter() {
+    public CurrencyMapper() {
         this.modelMapper = new ModelMapper();
     }
 

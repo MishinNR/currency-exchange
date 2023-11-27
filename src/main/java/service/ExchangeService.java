@@ -49,7 +49,6 @@ public class ExchangeService {
             } else if (exchangeRateDAO.findByBaseAndTargetCodes(crossCurrency, baseCurrency).isPresent() && exchangeRateDAO.findByBaseAndTargetCodes(crossCurrency, targetCurrency).isPresent()) {
                 ExchangeRateDTO crossToBaseDTO = exchangeRateService.findByBaseAndTargetCodes(crossCurrency, baseCurrency);
                 ExchangeRateDTO crossToTargetDTO = exchangeRateService.findByBaseAndTargetCodes(crossCurrency, targetCurrency);
-
                 BigDecimal crossToBaseRate = crossToBaseDTO.getRate();
                 BigDecimal crossToTargetRate = crossToTargetDTO.getRate();
                 BigDecimal rate = crossToTargetRate.divide(crossToBaseRate, DECIMAL64);
@@ -63,12 +62,13 @@ public class ExchangeService {
     }
 
     private ExchangeDTO buildExchangeDTO(CurrencyDTO baseCurrencyDTO, CurrencyDTO targetCurrencyDTO, BigDecimal rate, BigDecimal amount) {
+        BigDecimal convertedAmount = amount.multiply(rate);
         return new ExchangeDTO(
                 baseCurrencyDTO,
                 targetCurrencyDTO,
                 convertToDoublePrecision(rate),
                 amount,
-                convertToDoublePrecision(amount.multiply(rate))
+                convertToDoublePrecision(convertedAmount)
         );
     }
 

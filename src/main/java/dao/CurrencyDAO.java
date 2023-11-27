@@ -79,17 +79,17 @@ public class CurrencyDAO implements CRUD<Currency> {
 
     @Override
     public Optional<Currency> findById(Long id) throws SQLException {
-        return Optional.empty();
+        throw new SQLException("Method not implemented!");
     }
 
     @Override
     public Currency update(Currency currency) throws SQLException {
-        return null;
+        throw new SQLException("Method not implemented!");
     }
 
     @Override
     public boolean delete(Long id) throws SQLException {
-        return false;
+        throw new SQLException("Method not implemented!");
     }
 
     public Optional<Currency> findByCode(String code) throws SQLException {

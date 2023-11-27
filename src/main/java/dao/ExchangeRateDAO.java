@@ -117,7 +117,7 @@ public class ExchangeRateDAO implements CRUD<ExchangeRate> {
 
     @Override
     public Optional<ExchangeRate> findById(Long id) throws SQLException {
-        return Optional.empty();
+        throw new SQLException("Method not implemented!");
     }
 
     @Override
@@ -126,18 +126,14 @@ public class ExchangeRateDAO implements CRUD<ExchangeRate> {
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE)) {
             preparedStatement.setBigDecimal(1, exchangeRate.getRate());
             preparedStatement.setLong(2, exchangeRate.getId());
-            ResultSet resultSet = preparedStatement.executeQuery();
-            ExchangeRate updatedExchangeRate = null;
-            if (resultSet.next()) {
-                updatedExchangeRate = buildExchangeRate(resultSet);
-            }
-            return updatedExchangeRate;
+            preparedStatement.executeUpdate();
+            return exchangeRate;
         }
     }
 
     @Override
     public boolean delete(Long id) throws SQLException {
-        return false;
+        throw new SQLException("Method not implemented!");
     }
 
     public static ExchangeRateDAO getInstance() {

@@ -9,6 +9,12 @@ import java.math.BigDecimal;
 import static java.math.BigDecimal.ZERO;
 
 public class ValidationUtil {
+    public static void validateRequestParametersPassed(String params) throws FormFieldMissingException {
+        if (params == null) {
+            throw new FormFieldMissingException();
+        }
+    }
+
     public static void validateRequestParameterIsPresent(String param) throws FormFieldMissingException {
         if (param == null || param.isBlank()) {
             throw new FormFieldMissingException();

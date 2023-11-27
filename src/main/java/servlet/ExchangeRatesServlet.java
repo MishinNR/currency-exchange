@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import service.CurrencyService;
 import service.ExchangeRateService;
-import util.CurrencyConverter;
+import util.CurrencyMapper;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -25,13 +25,13 @@ public class ExchangeRatesServlet extends HttpServlet {
     private final CurrencyService currencyService;
     private final ExchangeRateService exchangeRateService;
     private final ObjectMapper objectMapper;
-    private final CurrencyConverter currencyConverter;
+    private final CurrencyMapper currencyMapper;
 
     public ExchangeRatesServlet() {
         this.currencyService = CurrencyService.getInstance();
         this.exchangeRateService = ExchangeRateService.getInstance();
         this.objectMapper = new ObjectMapper();
-        this.currencyConverter = new CurrencyConverter();
+        this.currencyMapper = new CurrencyMapper();
     }
 
     @Override
@@ -62,8 +62,8 @@ public class ExchangeRatesServlet extends HttpServlet {
 
                 ExchangeRateDTO exchangeRateDTO = exchangeRateService.save(
                         new ExchangeRate(
-                                currencyConverter.convertToEntity(currencyService.findByCode(baseCurrencyCode)),
-                                currencyConverter.convertToEntity(currencyService.findByCode(targetCurrencyCode)),
+                                currencyMapper.convertToEntity(currencyService.findByCode(baseCurrencyCode)),
+                                currencyMapper.convertToEntity(currencyService.findByCode(targetCurrencyCode)),
                                 new BigDecimal(rate)
                         )
                 );

@@ -7,7 +7,7 @@ import exception.DatabaseException;
 import exception.exchange.ExchangeRateAlreadyExistsException;
 import exception.exchange.ExchangeRateNotFoundException;
 import org.postgresql.util.PSQLException;
-import util.ExchangeRateConverter;
+import util.ExchangeRateMapper;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -18,7 +18,7 @@ import static java.util.stream.Collectors.toList;
 public class ExchangeRateService {
     private static final ExchangeRateService INSTANCE;
     private final ExchangeRateDAO exchangeRateDAO;
-    private final ExchangeRateConverter exchangeRateConverter;
+    private final ExchangeRateMapper exchangeRateMapper;
 
     static {
         INSTANCE = new ExchangeRateService();
@@ -26,13 +26,13 @@ public class ExchangeRateService {
 
     private ExchangeRateService() {
         this.exchangeRateDAO = ExchangeRateDAO.getInstance();
-        this.exchangeRateConverter = new ExchangeRateConverter();
+        this.exchangeRateMapper = new ExchangeRateMapper();
     }
 
     public List<ExchangeRateDTO> findAll() throws DatabaseException {
         try {
             return exchangeRateDAO.findAll().stream()
-                    .map(exchangeRateConverter::convertToDTO)
+                    .map(exchangeRateMapper::convertToDTO)
                     .collect(toList());
         } catch (SQLException e) {
             throw new DatabaseException();
@@ -45,7 +45,7 @@ public class ExchangeRateService {
             if (exchangeRate.isEmpty()) {
                 throw new ExchangeRateNotFoundException();
             }
-            return exchangeRateConverter.convertToDTO(exchangeRate.get());
+            return exchangeRateMapper.convertToDTO(exchangeRate.get());
         } catch (SQLException e) {
             throw new DatabaseException();
         }
@@ -53,7 +53,7 @@ public class ExchangeRateService {
 
     public ExchangeRateDTO save(ExchangeRate exchangeRate) throws ExchangeRateAlreadyExistsException, DatabaseException {
         try {
-            return exchangeRateConverter.convertToDTO(exchangeRateDAO.save(exchangeRate));
+            return exchangeRateMapper.convertToDTO(exchangeRateDAO.save(exchangeRate));
         } catch (PSQLException e) {
             throw new ExchangeRateAlreadyExistsException();
         } catch (SQLException e) {
@@ -63,7 +63,7 @@ public class ExchangeRateService {
 
     public ExchangeRateDTO update(ExchangeRate exchangeRate) throws DatabaseException {
         try {
-            return exchangeRateConverter.convertToDTO(exchangeRateDAO.update(exchangeRate));
+            return exchangeRateMapper.convertToDTO(exchangeRateDAO.update(exchangeRate));
         } catch (SQLException e) {
             throw new DatabaseException();
         }
