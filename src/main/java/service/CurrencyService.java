@@ -6,7 +6,7 @@ import entity.Currency;
 import exception.DatabaseException;
 import exception.currency.CurrencyAlreadyExistsException;
 import exception.currency.CurrencyNotFoundException;
-import org.postgresql.util.PSQLException;
+import org.sqlite.SQLiteException;
 import util.CurrencyMapper;
 
 import java.sql.SQLException;
@@ -54,7 +54,7 @@ public class CurrencyService {
     public CurrencyDTO save(Currency currency) throws DatabaseException, CurrencyAlreadyExistsException {
         try {
             return currencyMapper.convertToDTO(currencyDAO.save(currency));
-        } catch (PSQLException e) {
+        } catch (SQLiteException e) {
             throw new CurrencyAlreadyExistsException();
         } catch (SQLException e) {
             throw new DatabaseException();

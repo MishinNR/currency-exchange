@@ -81,7 +81,7 @@ public class ExchangeRateDAO implements CRUD<ExchangeRate> {
 
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                exchangeRate.setId(generatedKeys.getLong("id"));
+                exchangeRate.setId(generatedKeys.getLong(1));
             }
 
             return exchangeRate;

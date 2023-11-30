@@ -17,8 +17,6 @@ public class ConnectionManager {
     static {
         config.setDriverClassName(DATABASE_PROPERTIES.dbDriver());
         config.setJdbcUrl(DATABASE_PROPERTIES.dbUrl());
-        config.setUsername(DATABASE_PROPERTIES.dbUsername());
-        config.setPassword(DATABASE_PROPERTIES.dbPassword());
         ds = new HikariDataSource(config);
     }
 

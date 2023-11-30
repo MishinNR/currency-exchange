@@ -6,7 +6,7 @@ import entity.ExchangeRate;
 import exception.DatabaseException;
 import exception.exchange.ExchangeRateAlreadyExistsException;
 import exception.exchange.ExchangeRateNotFoundException;
-import org.postgresql.util.PSQLException;
+import org.sqlite.SQLiteException;
 import util.ExchangeRateMapper;
 
 import java.sql.SQLException;
@@ -54,7 +54,7 @@ public class ExchangeRateService {
     public ExchangeRateDTO save(ExchangeRate exchangeRate) throws ExchangeRateAlreadyExistsException, DatabaseException {
         try {
             return exchangeRateMapper.convertToDTO(exchangeRateDAO.save(exchangeRate));
-        } catch (PSQLException e) {
+        } catch (SQLiteException e) {
             throw new ExchangeRateAlreadyExistsException();
         } catch (SQLException e) {
             throw new DatabaseException();

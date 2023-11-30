@@ -58,7 +58,7 @@ public class CurrencyDAO implements CRUD<Currency> {
 
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                currency.setId(generatedKeys.getLong("id"));
+                currency.setId(generatedKeys.getLong(1));
             }
             return currency;
         }

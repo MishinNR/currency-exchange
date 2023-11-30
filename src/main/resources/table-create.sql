@@ -1,9 +1,9 @@
-DROP TABLE currencies CASCADE;
-DROP TABLE exchange_rates CASCADE;
+DROP TABLE currencies;
+DROP TABLE exchange_rates;
 
 CREATE TABLE IF NOT EXISTS currencies
 (
-    id        SERIAL PRIMARY KEY,
+    id        INTEGER PRIMARY KEY AUTOINCREMENT,
     code      VARCHAR NOT NULL,
     full_name VARCHAR NOT NULL,
     sign      VARCHAR NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS currencies
 
 CREATE TABLE IF NOT EXISTS exchange_rates
 (
-    id                 SERIAL PRIMARY KEY,
+    id                 INTEGER PRIMARY KEY AUTOINCREMENT,
     base_currency_id   INTEGER        NOT NULL,
     target_currency_id INTEGER        NOT NULL,
     rate               DECIMAL(10, 6) NOT NULL,
