@@ -12,22 +12,26 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import service.ExchangeRateService;
 import util.ExchangeRateMapper;
+import util.validation.FormFieldValidator;
+import util.validation.PathValidator;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.util.Arrays;
 
-import static util.ValidationUtil.*;
-
 @WebServlet("/exchangeRate/*")
 public class ExchangeRateServlet extends HttpServlet {
     private final ExchangeRateService exchangeRateService;
+    private final FormFieldValidator formFieldValidator;
+    private final PathValidator pathValidator;
     private final ObjectMapper objectMapper;
     private final ExchangeRateMapper exchangeRateMapper;
 
     public ExchangeRateServlet() {
         this.exchangeRateService = ExchangeRateService.getInstance();
+        this.formFieldValidator = FormFieldValidator.getInstance();
+        this.pathValidator = PathValidator.getInstance();
         this.objectMapper = new ObjectMapper();
         this.exchangeRateMapper = new ExchangeRateMapper();
     }
@@ -37,10 +41,10 @@ public class ExchangeRateServlet extends HttpServlet {
         try (PrintWriter writer = resp.getWriter()) {
             try {
                 String path = req.getPathInfo();
-                validateCurrencyCodeExistsInAddress(path);
+                pathValidator.validatePathWithCurrencyPairCode(path);
 
-                String pairCode = path.replaceAll("/", "").toUpperCase();
-                validateParameterPairCode(pairCode);
+                String pairCode = path.replaceAll("/", "");
+                formFieldValidator.validatePairCode(pairCode);
 
                 String baseCode = pairCode.substring(0, 3);
                 String targetCode = pairCode.substring(3, 6);
@@ -68,23 +72,22 @@ public class ExchangeRateServlet extends HttpServlet {
         try (PrintWriter writer = resp.getWriter()) {
             try {
                 String path = req.getPathInfo();
-                validateCurrencyCodeExistsInAddress(path);
+                pathValidator.validatePathWithCurrencyPairCode(path);
 
-                String pairCode = path.replaceAll("/", "").toUpperCase();
-                validateParameterPairCode(pairCode);
+                String pairCode = path.replaceAll("/", "");
+                formFieldValidator.validatePairCode(pairCode);
 
                 String parametersLine = req.getReader().readLine();
-                validateRequestParametersPassed(parametersLine);
+                pathValidator.validatePathParameters(parametersLine);
                 String[] parameters = parametersLine.split("&");
 
-                String rateSign = "rate=";
+                String rateParamDesignation = "rate=";
                 String rate = Arrays.stream(parameters)
-                        .filter(param -> param.startsWith(rateSign))
+                        .filter(param -> param.startsWith(rateParamDesignation))
                         .findFirst()
-                        .map(param -> param.replace(rateSign, ""))
-                        .orElse(null);
-                validateRequestParameterIsPresent(rate);
-                validateParameterRate(rate);
+                        .map(param -> param.replace(rateParamDesignation, ""))
+                        .orElse("");
+                formFieldValidator.validateRate(rate);
 
                 String baseCode = pairCode.substring(0, 3);
                 String targetCode = pairCode.substring(3, 6);

@@ -10,6 +10,7 @@ import java.util.Objects;
 import static util.NumberConverter.convertToDoublePrecision;
 
 public class ExchangeRateMapper {
+    private static final ExchangeRateMapper INSTANCE = new ExchangeRateMapper();
     private final ModelMapper modelMapper;
 
     public ExchangeRateMapper() {
@@ -36,5 +37,9 @@ public class ExchangeRateMapper {
 
     public ExchangeRate convertToEntity(ExchangeRateDTO exchangeRateDTO) {
         return modelMapper.map(exchangeRateDTO, ExchangeRate.class);
+    }
+
+    public static ExchangeRateMapper getInstance() {
+        return INSTANCE;
     }
 }

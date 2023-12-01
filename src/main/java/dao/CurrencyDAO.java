@@ -105,11 +105,6 @@ public class CurrencyDAO implements CRUD<Currency> {
         }
     }
 
-
-    public static CurrencyDAO getInstance() {
-        return INSTANCE;
-    }
-
     private Currency buildCurrency(ResultSet resultSet) throws SQLException {
         return new Currency(
                 resultSet.getLong("id"),
@@ -117,5 +112,9 @@ public class CurrencyDAO implements CRUD<Currency> {
                 resultSet.getString("full_name"),
                 resultSet.getString("sign")
         );
+    }
+
+    public static CurrencyDAO getInstance() {
+        return INSTANCE;
     }
 }

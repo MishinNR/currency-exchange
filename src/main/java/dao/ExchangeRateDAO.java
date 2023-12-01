@@ -136,10 +136,6 @@ public class ExchangeRateDAO implements CRUD<ExchangeRate> {
         throw new SQLException("Method not implemented!");
     }
 
-    public static ExchangeRateDAO getInstance() {
-        return INSTANCE;
-    }
-
     public ExchangeRate buildExchangeRate(ResultSet resultSet) throws SQLException {
         return new ExchangeRate(
                 resultSet.getLong("id"),
@@ -157,5 +153,9 @@ public class ExchangeRateDAO implements CRUD<ExchangeRate> {
                 ),
                 resultSet.getBigDecimal("rate")
         );
+    }
+
+    public static ExchangeRateDAO getInstance() {
+        return INSTANCE;
     }
 }

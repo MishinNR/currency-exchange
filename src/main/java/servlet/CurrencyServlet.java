@@ -9,20 +9,23 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import service.CurrencyService;
+import util.validation.FormFieldValidator;
+import util.validation.PathValidator;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import static util.ValidationUtil.validateCurrencyCodeExistsInAddress;
-import static util.ValidationUtil.validateParameterCode;
-
 @WebServlet("/currency/*")
 public class CurrencyServlet extends HttpServlet {
     private final CurrencyService currencyService;
+    private final FormFieldValidator formFieldValidator;
+    private final PathValidator pathValidator;
     private final ObjectMapper objectMapper;
 
     public CurrencyServlet() {
         this.currencyService = CurrencyService.getInstance();
+        this.formFieldValidator = FormFieldValidator.getInstance();
+        this.pathValidator = PathValidator.getInstance();
         this.objectMapper = new ObjectMapper();
     }
 
@@ -31,10 +34,10 @@ public class CurrencyServlet extends HttpServlet {
         try (PrintWriter writer = resp.getWriter()) {
             try {
                 String path = req.getPathInfo();
-                validateCurrencyCodeExistsInAddress(path);
+                pathValidator.validatePathWithCurrencyCode(path);
 
-                String code = path.replaceAll("/", "").toUpperCase();
-                validateParameterCode(code);
+                String code = path.replaceAll("/", "");
+                formFieldValidator.validateCode(code);
 
                 CurrencyDTO currencyDTO = currencyService.findByCode(code);
                 objectMapper.writeValue(writer, currencyDTO);

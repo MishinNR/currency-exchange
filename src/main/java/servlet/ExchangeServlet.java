@@ -9,20 +9,21 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import service.ExchangeService;
+import util.validation.FormFieldValidator;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 
-import static util.ValidationUtil.*;
-
 @WebServlet("/exchange")
 public class ExchangeServlet extends HttpServlet {
     private final ExchangeService exchangeService;
+    private final FormFieldValidator formFieldValidator;
     private final ObjectMapper objectMapper;
 
     public ExchangeServlet() {
         this.exchangeService = ExchangeService.getInstance();
+        this.formFieldValidator = FormFieldValidator.getInstance();
         this.objectMapper = new ObjectMapper();
     }
 
@@ -34,10 +35,9 @@ public class ExchangeServlet extends HttpServlet {
                 String toCurrency = req.getParameter("to");
                 String amount = req.getParameter("amount");
 
-                validateRequestParametersArePresent(fromCurrency, toCurrency, amount);
-                validateParameterCode(fromCurrency);
-                validateParameterCode(toCurrency);
-                validateParameterAmount(amount);
+                formFieldValidator.validateCode(fromCurrency);
+                formFieldValidator.validateCode(toCurrency);
+                formFieldValidator.validateAmount(amount);
 
                 ExchangeDTO exchangeDTO = exchangeService.exchange(
                         fromCurrency.toUpperCase(),
