@@ -78,7 +78,7 @@ public class ExchangeRateServlet extends HttpServlet {
                 formFieldValidator.validatePairCode(pairCode);
 
                 String parametersLine = req.getReader().readLine();
-                pathValidator.validatePathParameters(parametersLine);
+                pathValidator.validatePathWithParameters(parametersLine);
                 String[] parameters = parametersLine.split("&");
 
                 String rateParamDesignation = "rate=";

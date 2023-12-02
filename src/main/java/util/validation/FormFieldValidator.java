@@ -1,6 +1,7 @@
 package util.validation;
 
 import exception.format.*;
+import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
 
@@ -10,7 +11,7 @@ public class FormFieldValidator {
     private static final FormFieldValidator INSTANCE = new FormFieldValidator();
 
     public void validateName(String name) throws NameFormatException {
-        if (name.isBlank()) {
+        if (StringUtils.isBlank(name)) {
             throw new NameFormatException();
         } else if (name.trim().length() > 40) {
             throw new NameFormatException();
@@ -18,7 +19,7 @@ public class FormFieldValidator {
     }
 
     public void validateCode(String code) throws CodeFormatException {
-        if (code.isBlank()) {
+        if (StringUtils.isBlank(code)) {
             throw new CodeFormatException();
         } else if (code.trim().length() != 3
                    || !code.chars().allMatch(Character::isLetter)
@@ -29,7 +30,7 @@ public class FormFieldValidator {
     }
 
     public void validatePairCode(String pairCode) throws PairCodeFormatException {
-        if (pairCode.isBlank()) {
+        if (StringUtils.isBlank(pairCode)) {
             throw new PairCodeFormatException();
         } else if (pairCode.trim().length() != 6
                    || !pairCode.chars().allMatch(Character::isLetter)
@@ -39,7 +40,7 @@ public class FormFieldValidator {
     }
 
     public void validateSign(String sign) throws SignFormatException {
-        if (sign.isBlank()) {
+        if (StringUtils.isBlank(sign)) {
             throw new SignFormatException();
         } else if (sign.trim().length() > 3) {
             throw new SignFormatException();
@@ -48,7 +49,7 @@ public class FormFieldValidator {
 
     public void validateRate(String rate) throws RateFormatException {
         try {
-            if (rate.isBlank()) {
+            if (StringUtils.isBlank(rate)) {
                 throw new RateFormatException();
             }
             BigDecimal num = new BigDecimal(rate);
@@ -62,7 +63,7 @@ public class FormFieldValidator {
 
     public void validateAmount(String amount) throws AmountFormatException {
         try {
-            if (amount.isBlank()) {
+            if (StringUtils.isBlank(amount)) {
                 throw new AmountFormatException();
             }
             BigDecimal num = new BigDecimal(amount);

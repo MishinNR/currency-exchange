@@ -3,24 +3,25 @@ package util.validation;
 import exception.FormFieldMissingException;
 import exception.currency.CurrencyCodeMissingInAddressException;
 import exception.currency.CurrencyPairCodeMissingInAddressException;
+import org.apache.commons.lang3.StringUtils;
 
 public class PathValidator {
     private static final PathValidator INSTANCE = new PathValidator();
 
-    public void validatePathParameters(String parameters) throws FormFieldMissingException {
-        if (parameters.isBlank()) {
+    public void validatePathWithParameters(String path) throws FormFieldMissingException {
+        if (StringUtils.isBlank(path)) {
             throw new FormFieldMissingException();
         }
     }
 
     public void validatePathWithCurrencyCode(String path) throws CurrencyCodeMissingInAddressException {
-        if (path.isBlank()) {
+        if (StringUtils.isBlank(path)) {
             throw new CurrencyCodeMissingInAddressException();
         }
     }
 
     public void validatePathWithCurrencyPairCode(String path) throws CurrencyPairCodeMissingInAddressException {
-        if (path.isBlank()) {
+        if (StringUtils.isBlank(path)) {
             throw new CurrencyPairCodeMissingInAddressException();
         }
     }

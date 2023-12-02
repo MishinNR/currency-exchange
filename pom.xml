@@ -18,6 +18,7 @@
         <hikari.connection.pool.version>5.0.1</hikari.connection.pool.version>
         <modelmapper.version>3.2.0</modelmapper.version>
         <owner.versin>1.0.12</owner.versin>
+        <commons.lang3>3.12.0</commons.lang3>
     </properties>
 
     <dependencies>
@@ -77,6 +78,14 @@
             <groupId>org.aeonbits.owner</groupId>
             <artifactId>owner</artifactId>
             <version>${owner.versin}</version>
+        </dependency>
+
+        <!-- Commons lang3 -->
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons.lang3}</version>
         </dependency>
     </dependencies>
 
