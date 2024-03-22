@@ -1,13 +1,13 @@
 package service;
 
-import dao.CurrencyDAO;
-import dto.CurrencyDTO;
+import dao.CurrencyDao;
+import dto.CurrencyDto;
 import entity.Currency;
 import exception.DatabaseException;
 import exception.currency.CurrencyAlreadyExistsException;
 import exception.currency.CurrencyNotFoundException;
 import org.sqlite.SQLiteException;
-import util.CurrencyMapper;
+import util.CurrencyModelMapper;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -16,44 +16,41 @@ import java.util.Optional;
 import static java.util.stream.Collectors.toList;
 
 public class CurrencyService {
-    private static final CurrencyService INSTANCE;
-    private final CurrencyDAO currencyDAO;
-    private final CurrencyMapper currencyMapper;
+    private static final CurrencyService INSTANCE = new CurrencyService();
 
-    static {
-        INSTANCE = new CurrencyService();
-    }
+    private final CurrencyDao currencyDao;
+    private final CurrencyModelMapper currencyModelMapper;
 
     private CurrencyService() {
-        this.currencyDAO = CurrencyDAO.getInstance();
-        this.currencyMapper = new CurrencyMapper();
+        this.currencyDao = CurrencyDao.getInstance();
+        this.currencyModelMapper = new CurrencyModelMapper();
     }
 
-    public List<CurrencyDTO> findAll() throws DatabaseException {
+    public List<CurrencyDto> findAll() throws DatabaseException {
         try {
-            return currencyDAO.findAll().stream()
-                    .map(currencyMapper::convertToDTO)
+            return currencyDao.findAll().stream()
+                    .map(currencyModelMapper::convertToDto)
                     .collect(toList());
         } catch (SQLException e) {
             throw new DatabaseException();
         }
     }
 
-    public CurrencyDTO findByCode(String code) throws DatabaseException, CurrencyNotFoundException {
+    public CurrencyDto findByCode(String code) throws DatabaseException, CurrencyNotFoundException {
         try {
-            Optional<Currency> currency = currencyDAO.findByCode(code);
+            Optional<Currency> currency = currencyDao.findByCode(code);
             if (currency.isEmpty()) {
                 throw new CurrencyNotFoundException();
             }
-            return currencyMapper.convertToDTO(currency.get());
+            return currencyModelMapper.convertToDto(currency.get());
         } catch (SQLException e) {
             throw new DatabaseException();
         }
     }
 
-    public CurrencyDTO save(Currency currency) throws DatabaseException, CurrencyAlreadyExistsException {
+    public CurrencyDto save(Currency currency) throws DatabaseException, CurrencyAlreadyExistsException {
         try {
-            return currencyMapper.convertToDTO(currencyDAO.save(currency));
+            return currencyModelMapper.convertToDto(currencyDao.save(currency));
         } catch (SQLiteException e) {
             throw new CurrencyAlreadyExistsException();
         } catch (SQLException e) {

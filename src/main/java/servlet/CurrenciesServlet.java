@@ -1,8 +1,8 @@
 package servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dto.CurrencyDTO;
-import dto.ErrorDTO;
+import dto.CurrencyDto;
+import dto.ErrorDto;
 import entity.Currency;
 import exception.ApplicationException;
 import jakarta.servlet.annotation.WebServlet;
@@ -24,7 +24,7 @@ public class CurrenciesServlet extends HttpServlet {
 
     public CurrenciesServlet() {
         this.currencyService = CurrencyService.getInstance();
-        this.formFieldValidator = FormFieldValidator.getInstance();
+        this.formFieldValidator = new FormFieldValidator();
         this.objectMapper = new ObjectMapper();
     }
 
@@ -32,11 +32,11 @@ public class CurrenciesServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try (PrintWriter writer = resp.getWriter()) {
             try {
-                List<CurrencyDTO> currencies = currencyService.findAll();
+                List<CurrencyDto> currencies = currencyService.findAll();
                 objectMapper.writeValue(writer, currencies);
             } catch (ApplicationException e) {
                 resp.setStatus(e.getStatus());
-                objectMapper.writeValue(writer, new ErrorDTO(e.getMessage()));
+                objectMapper.writeValue(writer, new ErrorDto(e.getMessage()));
             }
         }
     }
@@ -53,11 +53,11 @@ public class CurrenciesServlet extends HttpServlet {
                 formFieldValidator.validateCode(code);
                 formFieldValidator.validateSign(sign);
 
-                CurrencyDTO currencyDTO = currencyService.save(new Currency(code, name, sign));
-                objectMapper.writeValue(writer, currencyDTO);
+                CurrencyDto currencyDto = currencyService.save(new Currency(code, name, sign));
+                objectMapper.writeValue(writer, currencyDto);
             } catch (ApplicationException e) {
                 resp.setStatus(e.getStatus());
-                objectMapper.writeValue(writer, new ErrorDTO(e.getMessage()));
+                objectMapper.writeValue(writer, new ErrorDto(e.getMessage()));
             }
         }
     }

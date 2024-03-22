@@ -17,12 +17,8 @@ import java.util.Optional;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ExchangeRateDAO implements CRUD<ExchangeRate> {
-    private static final ExchangeRateDAO INSTANCE;
-
-    static {
-        INSTANCE = new ExchangeRateDAO();
-    }
+public class ExchangeRateDao implements CRUD<ExchangeRate> {
+    private static final ExchangeRateDao INSTANCE = new ExchangeRateDao();
 
     private static final String FIND_ALL = """
             SELECT
@@ -117,7 +113,7 @@ public class ExchangeRateDAO implements CRUD<ExchangeRate> {
 
     @Override
     public Optional<ExchangeRate> findById(Long id) throws SQLException {
-        throw new SQLException("Method not implemented!");
+        throw new SQLException("Method is not implemented!");
     }
 
     @Override
@@ -133,7 +129,7 @@ public class ExchangeRateDAO implements CRUD<ExchangeRate> {
 
     @Override
     public boolean delete(Long id) throws SQLException {
-        throw new SQLException("Method not implemented!");
+        throw new SQLException("Method is not implemented!");
     }
 
     public ExchangeRate buildExchangeRate(ResultSet resultSet) throws SQLException {
@@ -155,7 +151,7 @@ public class ExchangeRateDAO implements CRUD<ExchangeRate> {
         );
     }
 
-    public static ExchangeRateDAO getInstance() {
+    public static ExchangeRateDao getInstance() {
         return INSTANCE;
     }
 }

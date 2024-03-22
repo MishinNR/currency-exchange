@@ -1,8 +1,8 @@
 package servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dto.ErrorDTO;
-import dto.ExchangeDTO;
+import dto.ErrorDto;
+import dto.ExchangeDto;
 import exception.ApplicationException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -23,7 +23,7 @@ public class ExchangeServlet extends HttpServlet {
 
     public ExchangeServlet() {
         this.exchangeService = ExchangeService.getInstance();
-        this.formFieldValidator = FormFieldValidator.getInstance();
+        this.formFieldValidator = new FormFieldValidator();
         this.objectMapper = new ObjectMapper();
     }
 
@@ -39,15 +39,15 @@ public class ExchangeServlet extends HttpServlet {
                 formFieldValidator.validateCode(toCurrency);
                 formFieldValidator.validateAmount(amount);
 
-                ExchangeDTO exchangeDTO = exchangeService.exchange(
+                ExchangeDto exchangeDto = exchangeService.exchange(
                         fromCurrency.toUpperCase(),
                         toCurrency.toUpperCase(),
                         new BigDecimal(amount)
                 );
-                objectMapper.writeValue(writer, exchangeDTO);
+                objectMapper.writeValue(writer, exchangeDto);
             } catch (ApplicationException e) {
                 resp.setStatus(e.getStatus());
-                objectMapper.writeValue(writer, new ErrorDTO(e.getMessage()));
+                objectMapper.writeValue(writer, new ErrorDto(e.getMessage()));
             }
         }
     }

@@ -1,8 +1,8 @@
 package servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dto.ErrorDTO;
-import dto.ExchangeRateDTO;
+import dto.ErrorDto;
+import dto.ExchangeRateDto;
 import entity.ExchangeRate;
 import exception.ApplicationException;
 import jakarta.servlet.ServletException;
@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import service.ExchangeRateService;
-import util.ExchangeRateMapper;
+import util.ExchangeRateModelMapper;
 import util.validation.FormFieldValidator;
 import util.validation.PathValidator;
 
@@ -26,14 +26,14 @@ public class ExchangeRateServlet extends HttpServlet {
     private final FormFieldValidator formFieldValidator;
     private final PathValidator pathValidator;
     private final ObjectMapper objectMapper;
-    private final ExchangeRateMapper exchangeRateMapper;
+    private final ExchangeRateModelMapper exchangeRateModelMapper;
 
     public ExchangeRateServlet() {
         this.exchangeRateService = ExchangeRateService.getInstance();
-        this.formFieldValidator = FormFieldValidator.getInstance();
-        this.pathValidator = PathValidator.getInstance();
+        this.formFieldValidator = new FormFieldValidator();
+        this.pathValidator = new PathValidator();
         this.objectMapper = new ObjectMapper();
-        this.exchangeRateMapper = new ExchangeRateMapper();
+        this.exchangeRateModelMapper = new ExchangeRateModelMapper();
     }
 
     @Override
@@ -49,11 +49,11 @@ public class ExchangeRateServlet extends HttpServlet {
                 String baseCode = pairCode.substring(0, 3);
                 String targetCode = pairCode.substring(3, 6);
 
-                ExchangeRateDTO exchangeRateDTO = exchangeRateService.findByBaseAndTargetCodes(baseCode, targetCode);
-                objectMapper.writeValue(writer, exchangeRateDTO);
+                ExchangeRateDto exchangeRateDto = exchangeRateService.findByBaseAndTargetCodes(baseCode, targetCode);
+                objectMapper.writeValue(writer, exchangeRateDto);
             } catch (ApplicationException e) {
                 resp.setStatus(e.getStatus());
-                objectMapper.writeValue(writer, new ErrorDTO(e.getMessage()));
+                objectMapper.writeValue(writer, new ErrorDto(e.getMessage()));
             }
         }
     }
@@ -92,13 +92,13 @@ public class ExchangeRateServlet extends HttpServlet {
                 String baseCode = pairCode.substring(0, 3);
                 String targetCode = pairCode.substring(3, 6);
 
-                ExchangeRate exchangeRate = exchangeRateMapper.convertToEntity(exchangeRateService.findByBaseAndTargetCodes(baseCode, targetCode));
+                ExchangeRate exchangeRate = exchangeRateModelMapper.convertToEntity(exchangeRateService.findByBaseAndTargetCodes(baseCode, targetCode));
                 exchangeRate.setRate(new BigDecimal(rate));
-                ExchangeRateDTO updatedExchangeRateDTO = exchangeRateService.update(exchangeRate);
-                objectMapper.writeValue(writer, updatedExchangeRateDTO);
+                ExchangeRateDto updatedExchangeRateDto = exchangeRateService.update(exchangeRate);
+                objectMapper.writeValue(writer, updatedExchangeRateDto);
             } catch (ApplicationException e) {
                 resp.setStatus(e.getStatus());
-                objectMapper.writeValue(writer, new ErrorDTO(e.getMessage()));
+                objectMapper.writeValue(writer, new ErrorDto(e.getMessage()));
             }
         }
     }

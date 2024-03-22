@@ -16,12 +16,8 @@ import java.util.Optional;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class CurrencyDAO implements CRUD<Currency> {
-    private static final CurrencyDAO INSTANCE;
-
-    static {
-        INSTANCE = new CurrencyDAO();
-    }
+public class CurrencyDao implements CRUD<Currency> {
+    private static final CurrencyDao INSTANCE = new CurrencyDao();
 
     private static final String FIND_ALL = """
             SELECT
@@ -79,17 +75,17 @@ public class CurrencyDAO implements CRUD<Currency> {
 
     @Override
     public Optional<Currency> findById(Long id) throws SQLException {
-        throw new SQLException("Method not implemented!");
+        throw new SQLException("Method is not implemented!");
     }
 
     @Override
     public Currency update(Currency currency) throws SQLException {
-        throw new SQLException("Method not implemented!");
+        throw new SQLException("Method is not implemented!");
     }
 
     @Override
     public boolean delete(Long id) throws SQLException {
-        throw new SQLException("Method not implemented!");
+        throw new SQLException("Method is not implemented!");
     }
 
     public Optional<Currency> findByCode(String code) throws SQLException {
@@ -114,7 +110,7 @@ public class CurrencyDAO implements CRUD<Currency> {
         );
     }
 
-    public static CurrencyDAO getInstance() {
+    public static CurrencyDao getInstance() {
         return INSTANCE;
     }
 }

@@ -1,58 +1,57 @@
 package service;
 
-import dao.ExchangeRateDAO;
-import dto.CurrencyDTO;
-import dto.ExchangeDTO;
-import dto.ExchangeRateDTO;
+import dao.ExchangeRateDao;
+import dto.CurrencyDto;
+import dto.ExchangeDto;
+import dto.ExchangeRateDto;
 import exception.DatabaseException;
 import exception.currency.CurrencyNotFoundException;
 import exception.exchange.ExchangeRateNotFoundException;
+import util.NumberConverter;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
 
 import static java.math.BigDecimal.ONE;
 import static java.math.MathContext.DECIMAL64;
-import static util.NumberConverter.convertToDoublePrecision;
 
 public class ExchangeService {
-    private static final ExchangeService INSTANCE;
-    private final CurrencyService currencyService;
-    private final ExchangeRateDAO exchangeRateDAO;
-    private final ExchangeRateService exchangeRateService;
+    private static final ExchangeService INSTANCE = new ExchangeService();
 
-    static {
-        INSTANCE = new ExchangeService();
-    }
+    private final CurrencyService currencyService;
+    private final ExchangeRateDao exchangeRateDao;
+    private final ExchangeRateService exchangeRateService;
+    private final NumberConverter numberConverter;
 
     private ExchangeService() {
         this.currencyService = CurrencyService.getInstance();
-        this.exchangeRateDAO = ExchangeRateDAO.getInstance();
+        this.exchangeRateDao = ExchangeRateDao.getInstance();
         this.exchangeRateService = ExchangeRateService.getInstance();
+        this.numberConverter = new NumberConverter();
     }
 
-    public ExchangeDTO exchange(String baseCurrency, String targetCurrency, BigDecimal amount) throws DatabaseException, CurrencyNotFoundException, ExchangeRateNotFoundException {
+    public ExchangeDto exchange(String baseCurrency, String targetCurrency, BigDecimal amount) throws DatabaseException, CurrencyNotFoundException, ExchangeRateNotFoundException {
         try {
-            CurrencyDTO baseCurrencyDTO = currencyService.findByCode(baseCurrency);
-            CurrencyDTO targetCurrencyDTO = currencyService.findByCode(targetCurrency);
+            CurrencyDto baseCurrencyDto = currencyService.findByCode(baseCurrency);
+            CurrencyDto targetCurrencyDto = currencyService.findByCode(targetCurrency);
 
             final String crossCurrency = "USD";
-            if (exchangeRateDAO.findByBaseAndTargetCodes(baseCurrency, targetCurrency).isPresent()) {
-                ExchangeRateDTO exchangeRateDTO = exchangeRateService.findByBaseAndTargetCodes(baseCurrency, targetCurrency);
+            if (exchangeRateDao.findByBaseAndTargetCodes(baseCurrency, targetCurrency).isPresent()) {
+                ExchangeRateDto exchangeRateDTO = exchangeRateService.findByBaseAndTargetCodes(baseCurrency, targetCurrency);
                 BigDecimal rate = exchangeRateDTO.getRate();
-                return buildExchangeDTO(baseCurrencyDTO, targetCurrencyDTO, rate, amount);
-            } else if (exchangeRateDAO.findByBaseAndTargetCodes(targetCurrency, baseCurrency).isPresent()) {
-                ExchangeRateDTO exchangeRateDTO = exchangeRateService.findByBaseAndTargetCodes(targetCurrency, baseCurrency);
+                return buildExchangeDTO(baseCurrencyDto, targetCurrencyDto, rate, amount);
+            } else if (exchangeRateDao.findByBaseAndTargetCodes(targetCurrency, baseCurrency).isPresent()) {
+                ExchangeRateDto exchangeRateDTO = exchangeRateService.findByBaseAndTargetCodes(targetCurrency, baseCurrency);
                 BigDecimal targetToBaseRate = exchangeRateDTO.getRate();
                 BigDecimal rate = ONE.divide(targetToBaseRate, DECIMAL64);
-                return buildExchangeDTO(baseCurrencyDTO, targetCurrencyDTO, rate, amount);
-            } else if (exchangeRateDAO.findByBaseAndTargetCodes(crossCurrency, baseCurrency).isPresent() && exchangeRateDAO.findByBaseAndTargetCodes(crossCurrency, targetCurrency).isPresent()) {
-                ExchangeRateDTO crossToBaseDTO = exchangeRateService.findByBaseAndTargetCodes(crossCurrency, baseCurrency);
-                ExchangeRateDTO crossToTargetDTO = exchangeRateService.findByBaseAndTargetCodes(crossCurrency, targetCurrency);
+                return buildExchangeDTO(baseCurrencyDto, targetCurrencyDto, rate, amount);
+            } else if (exchangeRateDao.findByBaseAndTargetCodes(crossCurrency, baseCurrency).isPresent() && exchangeRateDao.findByBaseAndTargetCodes(crossCurrency, targetCurrency).isPresent()) {
+                ExchangeRateDto crossToBaseDTO = exchangeRateService.findByBaseAndTargetCodes(crossCurrency, baseCurrency);
+                ExchangeRateDto crossToTargetDTO = exchangeRateService.findByBaseAndTargetCodes(crossCurrency, targetCurrency);
                 BigDecimal crossToBaseRate = crossToBaseDTO.getRate();
                 BigDecimal crossToTargetRate = crossToTargetDTO.getRate();
                 BigDecimal rate = crossToTargetRate.divide(crossToBaseRate, DECIMAL64);
-                return buildExchangeDTO(baseCurrencyDTO, targetCurrencyDTO, rate, amount);
+                return buildExchangeDTO(baseCurrencyDto, targetCurrencyDto, rate, amount);
             } else {
                 throw new ExchangeRateNotFoundException();
             }
@@ -61,14 +60,14 @@ public class ExchangeService {
         }
     }
 
-    private ExchangeDTO buildExchangeDTO(CurrencyDTO baseCurrencyDTO, CurrencyDTO targetCurrencyDTO, BigDecimal rate, BigDecimal amount) {
+    private ExchangeDto buildExchangeDTO(CurrencyDto baseCurrencyDto, CurrencyDto targetCurrencyDto, BigDecimal rate, BigDecimal amount) {
         BigDecimal convertedAmount = amount.multiply(rate);
-        return new ExchangeDTO(
-                baseCurrencyDTO,
-                targetCurrencyDTO,
-                convertToDoublePrecision(rate),
+        return new ExchangeDto(
+                baseCurrencyDto,
+                targetCurrencyDto,
+                numberConverter.convertToDoublePrecision(rate),
                 amount,
-                convertToDoublePrecision(convertedAmount)
+                numberConverter.convertToDoublePrecision(convertedAmount)
         );
     }
 

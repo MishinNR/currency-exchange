@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CurrencyDTO {
+public class CurrencyDto {
     private Long id;
     private String code;
     @JsonProperty("name")

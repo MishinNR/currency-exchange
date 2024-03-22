@@ -1,13 +1,13 @@
 package service;
 
-import dao.ExchangeRateDAO;
-import dto.ExchangeRateDTO;
+import dao.ExchangeRateDao;
+import dto.ExchangeRateDto;
 import entity.ExchangeRate;
 import exception.DatabaseException;
 import exception.exchange.ExchangeRateAlreadyExistsException;
 import exception.exchange.ExchangeRateNotFoundException;
 import org.sqlite.SQLiteException;
-import util.ExchangeRateMapper;
+import util.ExchangeRateModelMapper;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -16,44 +16,41 @@ import java.util.Optional;
 import static java.util.stream.Collectors.toList;
 
 public class ExchangeRateService {
-    private static final ExchangeRateService INSTANCE;
-    private final ExchangeRateDAO exchangeRateDAO;
-    private final ExchangeRateMapper exchangeRateMapper;
+    private static final ExchangeRateService INSTANCE = new ExchangeRateService();
 
-    static {
-        INSTANCE = new ExchangeRateService();
-    }
+    private final ExchangeRateDao exchangeRateDao;
+    private final ExchangeRateModelMapper exchangeRateModelMapper;
 
     private ExchangeRateService() {
-        this.exchangeRateDAO = ExchangeRateDAO.getInstance();
-        this.exchangeRateMapper = new ExchangeRateMapper();
+        this.exchangeRateDao = ExchangeRateDao.getInstance();
+        this.exchangeRateModelMapper = new ExchangeRateModelMapper();
     }
 
-    public List<ExchangeRateDTO> findAll() throws DatabaseException {
+    public List<ExchangeRateDto> findAll() throws DatabaseException {
         try {
-            return exchangeRateDAO.findAll().stream()
-                    .map(exchangeRateMapper::convertToDTO)
+            return exchangeRateDao.findAll().stream()
+                    .map(exchangeRateModelMapper::convertToDTO)
                     .collect(toList());
         } catch (SQLException e) {
             throw new DatabaseException();
         }
     }
 
-    public ExchangeRateDTO findByBaseAndTargetCodes(String baseCode, String targetCode) throws ExchangeRateNotFoundException, DatabaseException {
+    public ExchangeRateDto findByBaseAndTargetCodes(String baseCode, String targetCode) throws ExchangeRateNotFoundException, DatabaseException {
         try {
-            Optional<ExchangeRate> exchangeRate = exchangeRateDAO.findByBaseAndTargetCodes(baseCode, targetCode);
+            Optional<ExchangeRate> exchangeRate = exchangeRateDao.findByBaseAndTargetCodes(baseCode, targetCode);
             if (exchangeRate.isEmpty()) {
                 throw new ExchangeRateNotFoundException();
             }
-            return exchangeRateMapper.convertToDTO(exchangeRate.get());
+            return exchangeRateModelMapper.convertToDTO(exchangeRate.get());
         } catch (SQLException e) {
             throw new DatabaseException();
         }
     }
 
-    public ExchangeRateDTO save(ExchangeRate exchangeRate) throws ExchangeRateAlreadyExistsException, DatabaseException {
+    public ExchangeRateDto save(ExchangeRate exchangeRate) throws ExchangeRateAlreadyExistsException, DatabaseException {
         try {
-            return exchangeRateMapper.convertToDTO(exchangeRateDAO.save(exchangeRate));
+            return exchangeRateModelMapper.convertToDTO(exchangeRateDao.save(exchangeRate));
         } catch (SQLiteException e) {
             throw new ExchangeRateAlreadyExistsException();
         } catch (SQLException e) {
@@ -61,9 +58,9 @@ public class ExchangeRateService {
         }
     }
 
-    public ExchangeRateDTO update(ExchangeRate exchangeRate) throws DatabaseException {
+    public ExchangeRateDto update(ExchangeRate exchangeRate) throws DatabaseException {
         try {
-            return exchangeRateMapper.convertToDTO(exchangeRateDAO.update(exchangeRate));
+            return exchangeRateModelMapper.convertToDTO(exchangeRateDao.update(exchangeRate));
         } catch (SQLException e) {
             throw new DatabaseException();
         }

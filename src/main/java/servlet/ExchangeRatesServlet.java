@@ -1,8 +1,8 @@
 package servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dto.ErrorDTO;
-import dto.ExchangeRateDTO;
+import dto.ErrorDto;
+import dto.ExchangeRateDto;
 import entity.ExchangeRate;
 import exception.ApplicationException;
 import jakarta.servlet.annotation.WebServlet;
@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import service.CurrencyService;
 import service.ExchangeRateService;
-import util.CurrencyMapper;
+import util.CurrencyModelMapper;
 import util.validation.FormFieldValidator;
 
 import java.io.IOException;
@@ -24,26 +24,26 @@ public class ExchangeRatesServlet extends HttpServlet {
     private final CurrencyService currencyService;
     private final ExchangeRateService exchangeRateService;
     private final FormFieldValidator formFieldValidator;
+    private final CurrencyModelMapper currencyModelMapper;
     private final ObjectMapper objectMapper;
-    private final CurrencyMapper currencyMapper;
 
     public ExchangeRatesServlet() {
         this.currencyService = CurrencyService.getInstance();
         this.exchangeRateService = ExchangeRateService.getInstance();
-        this.formFieldValidator = FormFieldValidator.getInstance();
+        this.formFieldValidator = new FormFieldValidator();
+        this.currencyModelMapper = new CurrencyModelMapper();
         this.objectMapper = new ObjectMapper();
-        this.currencyMapper = new CurrencyMapper();
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try (PrintWriter writer = resp.getWriter()) {
             try {
-                List<ExchangeRateDTO> exchangeRates = exchangeRateService.findAll();
+                List<ExchangeRateDto> exchangeRates = exchangeRateService.findAll();
                 objectMapper.writeValue(writer, exchangeRates);
             } catch (ApplicationException e) {
                 resp.setStatus(e.getStatus());
-                objectMapper.writeValue(writer, new ErrorDTO(e.getMessage()));
+                objectMapper.writeValue(writer, new ErrorDto(e.getMessage()));
             }
         }
     }
@@ -60,17 +60,17 @@ public class ExchangeRatesServlet extends HttpServlet {
                 formFieldValidator.validateCode(targetCurrencyCode);
                 formFieldValidator.validateRate(rate);
 
-                ExchangeRateDTO exchangeRateDTO = exchangeRateService.save(
+                ExchangeRateDto exchangeRateDto = exchangeRateService.save(
                         new ExchangeRate(
-                                currencyMapper.convertToEntity(currencyService.findByCode(baseCurrencyCode)),
-                                currencyMapper.convertToEntity(currencyService.findByCode(targetCurrencyCode)),
+                                currencyModelMapper.convertToEntity(currencyService.findByCode(baseCurrencyCode)),
+                                currencyModelMapper.convertToEntity(currencyService.findByCode(targetCurrencyCode)),
                                 new BigDecimal(rate)
                         )
                 );
-                objectMapper.writeValue(writer, exchangeRateDTO);
+                objectMapper.writeValue(writer, exchangeRateDto);
             } catch (ApplicationException e) {
                 resp.setStatus(e.getStatus());
-                objectMapper.writeValue(writer, new ErrorDTO(e.getMessage()));
+                objectMapper.writeValue(writer, new ErrorDto(e.getMessage()));
             }
         }
     }

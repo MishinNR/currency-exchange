@@ -1,6 +1,6 @@
 package dto;
 
-public record ErrorDTO(
+public record ErrorDto(
         String message
 ) {
 }

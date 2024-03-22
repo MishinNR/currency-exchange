@@ -6,7 +6,6 @@ import exception.currency.CurrencyPairCodeMissingInAddressException;
 import org.apache.commons.lang3.StringUtils;
 
 public class PathValidator {
-    private static final PathValidator INSTANCE = new PathValidator();
 
     public void validatePathWithParameters(String path) throws FormFieldMissingException {
         if (StringUtils.isBlank(path)) {
@@ -24,9 +23,5 @@ public class PathValidator {
         if (StringUtils.isBlank(path)) {
             throw new CurrencyPairCodeMissingInAddressException();
         }
-    }
-
-    public static PathValidator getInstance() {
-        return INSTANCE;
     }
 }
