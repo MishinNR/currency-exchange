@@ -21,13 +21,11 @@ public class ExchangeService {
     private final CurrencyService currencyService;
     private final ExchangeRateDao exchangeRateDao;
     private final ExchangeRateService exchangeRateService;
-    private final NumberConverter numberConverter;
 
     private ExchangeService() {
         this.currencyService = CurrencyService.getInstance();
         this.exchangeRateDao = ExchangeRateDao.getInstance();
         this.exchangeRateService = ExchangeRateService.getInstance();
-        this.numberConverter = new NumberConverter();
     }
 
     public ExchangeDto exchange(String baseCurrency, String targetCurrency, BigDecimal amount) throws DatabaseException, CurrencyNotFoundException, ExchangeRateNotFoundException {
@@ -65,9 +63,9 @@ public class ExchangeService {
         return new ExchangeDto(
                 baseCurrencyDto,
                 targetCurrencyDto,
-                numberConverter.convertToDoublePrecision(rate),
+                NumberConverter.convertToDoublePrecision(rate),
                 amount,
-                numberConverter.convertToDoublePrecision(convertedAmount)
+                NumberConverter.convertToDoublePrecision(convertedAmount)
         );
     }
 

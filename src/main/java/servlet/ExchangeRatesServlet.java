@@ -30,8 +30,8 @@ public class ExchangeRatesServlet extends HttpServlet {
     public ExchangeRatesServlet() {
         this.currencyService = CurrencyService.getInstance();
         this.exchangeRateService = ExchangeRateService.getInstance();
-        this.formFieldValidator = new FormFieldValidator();
-        this.currencyModelMapper = new CurrencyModelMapper();
+        this.formFieldValidator = FormFieldValidator.getInstance();
+        this.currencyModelMapper = CurrencyModelMapper.getInstance();
         this.objectMapper = new ObjectMapper();
     }
 

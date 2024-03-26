@@ -23,7 +23,7 @@ public class ExchangeRateService {
 
     private ExchangeRateService() {
         this.exchangeRateDao = ExchangeRateDao.getInstance();
-        this.exchangeRateModelMapper = new ExchangeRateModelMapper();
+        this.exchangeRateModelMapper = ExchangeRateModelMapper.getInstance();
     }
 
     public List<ExchangeRateDto> findAll() throws DatabaseException {

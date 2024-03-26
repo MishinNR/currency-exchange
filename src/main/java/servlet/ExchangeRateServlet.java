@@ -30,10 +30,10 @@ public class ExchangeRateServlet extends HttpServlet {
 
     public ExchangeRateServlet() {
         this.exchangeRateService = ExchangeRateService.getInstance();
-        this.formFieldValidator = new FormFieldValidator();
-        this.pathValidator = new PathValidator();
+        this.exchangeRateModelMapper = ExchangeRateModelMapper.getInstance();
+        this.formFieldValidator = FormFieldValidator.getInstance();
+        this.pathValidator = PathValidator.getInstance();
         this.objectMapper = new ObjectMapper();
-        this.exchangeRateModelMapper = new ExchangeRateModelMapper();
     }
 
     @Override

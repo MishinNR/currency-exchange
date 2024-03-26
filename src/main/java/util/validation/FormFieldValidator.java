@@ -1,13 +1,17 @@
 package util.validation;
 
 import exception.format.*;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
 
 import static java.math.BigDecimal.ZERO;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FormFieldValidator {
+    private static final FormFieldValidator INSTANCE = new FormFieldValidator();
 
     public void validateName(String name) throws NameFormatException {
         if (StringUtils.isBlank(name)) {
@@ -72,5 +76,9 @@ public class FormFieldValidator {
         } catch (NumberFormatException e) {
             throw new AmountFormatException();
         }
+    }
+
+    public static FormFieldValidator getInstance() {
+        return INSTANCE;
     }
 }

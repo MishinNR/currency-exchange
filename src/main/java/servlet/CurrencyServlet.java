@@ -24,8 +24,8 @@ public class CurrencyServlet extends HttpServlet {
 
     public CurrencyServlet() {
         this.currencyService = CurrencyService.getInstance();
-        this.formFieldValidator = new FormFieldValidator();
-        this.pathValidator = new PathValidator();
+        this.formFieldValidator = FormFieldValidator.getInstance();
+        this.pathValidator = PathValidator.getInstance();
         this.objectMapper = new ObjectMapper();
     }
 

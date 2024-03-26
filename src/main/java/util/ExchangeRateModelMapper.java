@@ -8,13 +8,13 @@ import org.modelmapper.ModelMapper;
 import java.util.Objects;
 
 public class ExchangeRateModelMapper {
-    private final ModelMapper modelMapper;
-    private final NumberConverter numberConverter;
+    private static final ExchangeRateModelMapper INSTANCE = new ExchangeRateModelMapper();
 
-    public ExchangeRateModelMapper() {
+    private final ModelMapper modelMapper;
+
+    private ExchangeRateModelMapper() {
         this.modelMapper = new ModelMapper();
         this.modelMapper.createTypeMap(ExchangeRate.class, ExchangeRateDto.class).setPostConverter(toDtoConverter());
-        this.numberConverter = new NumberConverter();
     }
 
     public Converter<ExchangeRate, ExchangeRateDto> toDtoConverter() {
@@ -30,7 +30,7 @@ public class ExchangeRateModelMapper {
         destination.setRate(
                 Objects.isNull(source) || Objects.isNull(source.getRate())
                         ? null
-                        : numberConverter.convertToDoublePrecision(source.getRate())
+                        : NumberConverter.convertToDoublePrecision(source.getRate())
         );
     }
 
@@ -40,5 +40,9 @@ public class ExchangeRateModelMapper {
 
     public ExchangeRate convertToEntity(ExchangeRateDto exchangeRateDto) {
         return modelMapper.map(exchangeRateDto, ExchangeRate.class);
+    }
+
+    public static ExchangeRateModelMapper getInstance() {
+        return INSTANCE;
     }
 }

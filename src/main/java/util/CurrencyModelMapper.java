@@ -4,10 +4,13 @@ import dto.CurrencyDto;
 import entity.Currency;
 import org.modelmapper.ModelMapper;
 
+
 public class CurrencyModelMapper {
+    private static final CurrencyModelMapper INSTANCE = new CurrencyModelMapper();
+
     private final ModelMapper modelMapper;
 
-    public CurrencyModelMapper() {
+    private CurrencyModelMapper() {
         this.modelMapper = new ModelMapper();
     }
 
@@ -17,5 +20,9 @@ public class CurrencyModelMapper {
 
     public Currency convertToEntity(CurrencyDto currencyDto) {
         return modelMapper.map(currencyDto, Currency.class);
+    }
+
+    public static CurrencyModelMapper getInstance() {
+        return INSTANCE;
     }
 }

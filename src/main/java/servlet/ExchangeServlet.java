@@ -23,7 +23,7 @@ public class ExchangeServlet extends HttpServlet {
 
     public ExchangeServlet() {
         this.exchangeService = ExchangeService.getInstance();
-        this.formFieldValidator = new FormFieldValidator();
+        this.formFieldValidator = FormFieldValidator.getInstance();
         this.objectMapper = new ObjectMapper();
     }
 
