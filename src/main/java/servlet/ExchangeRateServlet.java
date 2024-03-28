@@ -11,28 +11,27 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import service.ExchangeRateService;
-import util.ExchangeRateModelMapper;
-import util.validation.FormFieldValidator;
-import util.validation.PathValidator;
+import util.mapper.ExchangeRateModelMapper;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.util.Arrays;
 
+import static util.validation.FormFieldValidator.validatePairCode;
+import static util.validation.FormFieldValidator.validateRate;
+import static util.validation.PathValidator.validatePathWithCurrencyPairCode;
+import static util.validation.PathValidator.validatePathWithParameters;
+
 @WebServlet("/exchangeRate/*")
 public class ExchangeRateServlet extends HttpServlet {
     private final ExchangeRateService exchangeRateService;
-    private final FormFieldValidator formFieldValidator;
-    private final PathValidator pathValidator;
-    private final ObjectMapper objectMapper;
     private final ExchangeRateModelMapper exchangeRateModelMapper;
+    private final ObjectMapper objectMapper;
 
     public ExchangeRateServlet() {
         this.exchangeRateService = ExchangeRateService.getInstance();
         this.exchangeRateModelMapper = ExchangeRateModelMapper.getInstance();
-        this.formFieldValidator = FormFieldValidator.getInstance();
-        this.pathValidator = PathValidator.getInstance();
         this.objectMapper = new ObjectMapper();
     }
 
@@ -41,10 +40,10 @@ public class ExchangeRateServlet extends HttpServlet {
         try (PrintWriter writer = resp.getWriter()) {
             try {
                 String path = req.getPathInfo();
-                pathValidator.validatePathWithCurrencyPairCode(path);
+                validatePathWithCurrencyPairCode(path);
 
                 String pairCode = path.replaceAll("/", "");
-                formFieldValidator.validatePairCode(pairCode);
+                validatePairCode(pairCode);
 
                 String baseCode = pairCode.substring(0, 3);
                 String targetCode = pairCode.substring(3, 6);
@@ -72,13 +71,13 @@ public class ExchangeRateServlet extends HttpServlet {
         try (PrintWriter writer = resp.getWriter()) {
             try {
                 String path = req.getPathInfo();
-                pathValidator.validatePathWithCurrencyPairCode(path);
+                validatePathWithCurrencyPairCode(path);
 
                 String pairCode = path.replaceAll("/", "");
-                formFieldValidator.validatePairCode(pairCode);
+                validatePairCode(pairCode);
 
                 String parametersLine = req.getReader().readLine();
-                pathValidator.validatePathWithParameters(parametersLine);
+                validatePathWithParameters(parametersLine);
                 String[] parameters = parametersLine.split("&");
 
                 String rateParamDesignation = "rate=";
@@ -87,7 +86,7 @@ public class ExchangeRateServlet extends HttpServlet {
                         .findFirst()
                         .map(param -> param.replace(rateParamDesignation, ""))
                         .orElse("");
-                formFieldValidator.validateRate(rate);
+                validateRate(rate);
 
                 String baseCode = pairCode.substring(0, 3);
                 String targetCode = pairCode.substring(3, 6);

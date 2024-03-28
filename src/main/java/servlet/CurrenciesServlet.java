@@ -10,21 +10,20 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import service.CurrencyService;
-import util.validation.FormFieldValidator;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
+import static util.validation.FormFieldValidator.*;
+
 @WebServlet("/currencies")
 public class CurrenciesServlet extends HttpServlet {
     private final CurrencyService currencyService;
-    private final FormFieldValidator formFieldValidator;
     private final ObjectMapper objectMapper;
 
     public CurrenciesServlet() {
         this.currencyService = CurrencyService.getInstance();
-        this.formFieldValidator = FormFieldValidator.getInstance();
         this.objectMapper = new ObjectMapper();
     }
 
@@ -49,9 +48,9 @@ public class CurrenciesServlet extends HttpServlet {
                 String code = req.getParameter("code");
                 String sign = req.getParameter("sign");
 
-                formFieldValidator.validateName(name);
-                formFieldValidator.validateCode(code);
-                formFieldValidator.validateSign(sign);
+                validateName(name);
+                validateCode(code);
+                validateSign(sign);
 
                 CurrencyDto currencyDto = currencyService.save(new Currency(code, name, sign));
                 objectMapper.writeValue(writer, currencyDto);

@@ -11,26 +11,26 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import service.CurrencyService;
 import service.ExchangeRateService;
-import util.CurrencyModelMapper;
-import util.validation.FormFieldValidator;
+import util.mapper.CurrencyModelMapper;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static util.validation.FormFieldValidator.validateCode;
+import static util.validation.FormFieldValidator.validateRate;
+
 @WebServlet("/exchangeRates")
 public class ExchangeRatesServlet extends HttpServlet {
     private final CurrencyService currencyService;
     private final ExchangeRateService exchangeRateService;
-    private final FormFieldValidator formFieldValidator;
     private final CurrencyModelMapper currencyModelMapper;
     private final ObjectMapper objectMapper;
 
     public ExchangeRatesServlet() {
         this.currencyService = CurrencyService.getInstance();
         this.exchangeRateService = ExchangeRateService.getInstance();
-        this.formFieldValidator = FormFieldValidator.getInstance();
         this.currencyModelMapper = CurrencyModelMapper.getInstance();
         this.objectMapper = new ObjectMapper();
     }
@@ -56,9 +56,9 @@ public class ExchangeRatesServlet extends HttpServlet {
                 String targetCurrencyCode = req.getParameter("targetCurrencyCode");
                 String rate = req.getParameter("rate");
 
-                formFieldValidator.validateCode(baseCurrencyCode);
-                formFieldValidator.validateCode(targetCurrencyCode);
-                formFieldValidator.validateRate(rate);
+                validateCode(baseCurrencyCode);
+                validateCode(targetCurrencyCode);
+                validateRate(rate);
 
                 ExchangeRateDto exchangeRateDto = exchangeRateService.save(
                         new ExchangeRate(

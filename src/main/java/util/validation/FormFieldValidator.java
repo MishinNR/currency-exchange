@@ -1,19 +1,14 @@
 package util.validation;
 
 import exception.format.*;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
 
 import static java.math.BigDecimal.ZERO;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FormFieldValidator {
-    private static final FormFieldValidator INSTANCE = new FormFieldValidator();
-
-    public void validateName(String name) throws NameFormatException {
+    public static void validateName(String name) throws NameFormatException {
         if (StringUtils.isBlank(name)) {
             throw new NameFormatException();
         } else if (name.trim().length() > 40) {
@@ -21,7 +16,7 @@ public class FormFieldValidator {
         }
     }
 
-    public void validateCode(String code) throws CodeFormatException {
+    public static void validateCode(String code) throws CodeFormatException {
         if (StringUtils.isBlank(code)) {
             throw new CodeFormatException();
         } else if (code.trim().length() != 3
@@ -32,7 +27,7 @@ public class FormFieldValidator {
         }
     }
 
-    public void validatePairCode(String pairCode) throws PairCodeFormatException {
+    public static void validatePairCode(String pairCode) throws PairCodeFormatException {
         if (StringUtils.isBlank(pairCode)) {
             throw new PairCodeFormatException();
         } else if (pairCode.trim().length() != 6
@@ -42,7 +37,7 @@ public class FormFieldValidator {
         }
     }
 
-    public void validateSign(String sign) throws SignFormatException {
+    public static void validateSign(String sign) throws SignFormatException {
         if (StringUtils.isBlank(sign)) {
             throw new SignFormatException();
         } else if (sign.trim().length() > 3) {
@@ -50,7 +45,7 @@ public class FormFieldValidator {
         }
     }
 
-    public void validateRate(String rate) throws RateFormatException {
+    public static void validateRate(String rate) throws RateFormatException {
         try {
             if (StringUtils.isBlank(rate)) {
                 throw new RateFormatException();
@@ -64,7 +59,7 @@ public class FormFieldValidator {
         }
     }
 
-    public void validateAmount(String amount) throws AmountFormatException {
+    public static void validateAmount(String amount) throws AmountFormatException {
         try {
             if (StringUtils.isBlank(amount)) {
                 throw new AmountFormatException();
@@ -76,9 +71,5 @@ public class FormFieldValidator {
         } catch (NumberFormatException e) {
             throw new AmountFormatException();
         }
-    }
-
-    public static FormFieldValidator getInstance() {
-        return INSTANCE;
     }
 }

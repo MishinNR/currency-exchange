@@ -7,7 +7,7 @@ import exception.DatabaseException;
 import exception.currency.CurrencyAlreadyExistsException;
 import exception.currency.CurrencyNotFoundException;
 import org.sqlite.SQLiteException;
-import util.CurrencyModelMapper;
+import util.mapper.CurrencyModelMapper;
 
 import java.sql.SQLException;
 import java.util.List;

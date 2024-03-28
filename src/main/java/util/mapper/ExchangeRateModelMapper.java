@@ -1,9 +1,10 @@
-package util;
+package util.mapper;
 
 import dto.ExchangeRateDto;
 import entity.ExchangeRate;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
+import util.NumberConverter;
 
 import java.util.Objects;
 

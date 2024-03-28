@@ -7,7 +7,7 @@ import exception.DatabaseException;
 import exception.exchange.ExchangeRateAlreadyExistsException;
 import exception.exchange.ExchangeRateNotFoundException;
 import org.sqlite.SQLiteException;
-import util.ExchangeRateModelMapper;
+import util.mapper.ExchangeRateModelMapper;
 
 import java.sql.SQLException;
 import java.util.List;

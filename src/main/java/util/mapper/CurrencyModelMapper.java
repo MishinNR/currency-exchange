@@ -1,4 +1,4 @@
-package util;
+package util.mapper;
 
 import dto.CurrencyDto;
 import entity.Currency;
