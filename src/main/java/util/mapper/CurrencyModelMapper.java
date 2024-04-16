@@ -6,11 +6,9 @@ import org.modelmapper.ModelMapper;
 
 
 public class CurrencyModelMapper {
-    private static final CurrencyModelMapper INSTANCE = new CurrencyModelMapper();
-
     private final ModelMapper modelMapper;
 
-    private CurrencyModelMapper() {
+    public CurrencyModelMapper() {
         this.modelMapper = new ModelMapper();
     }
 
@@ -20,9 +18,5 @@ public class CurrencyModelMapper {
 
     public Currency convertToEntity(CurrencyDto currencyDto) {
         return modelMapper.map(currencyDto, Currency.class);
-    }
-
-    public static CurrencyModelMapper getInstance() {
-        return INSTANCE;
     }
 }

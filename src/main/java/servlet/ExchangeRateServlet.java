@@ -31,7 +31,7 @@ public class ExchangeRateServlet extends HttpServlet {
 
     public ExchangeRateServlet() {
         this.exchangeRateService = ExchangeRateService.getInstance();
-        this.exchangeRateModelMapper = ExchangeRateModelMapper.getInstance();
+        this.exchangeRateModelMapper = new ExchangeRateModelMapper();
         this.objectMapper = new ObjectMapper();
     }
 

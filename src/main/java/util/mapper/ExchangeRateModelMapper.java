@@ -9,11 +9,9 @@ import util.NumberConverter;
 import java.util.Objects;
 
 public class ExchangeRateModelMapper {
-    private static final ExchangeRateModelMapper INSTANCE = new ExchangeRateModelMapper();
-
     private final ModelMapper modelMapper;
 
-    private ExchangeRateModelMapper() {
+    public ExchangeRateModelMapper() {
         this.modelMapper = new ModelMapper();
         this.modelMapper.createTypeMap(ExchangeRate.class, ExchangeRateDto.class).setPostConverter(toDtoConverter());
     }
@@ -41,9 +39,5 @@ public class ExchangeRateModelMapper {
 
     public ExchangeRate convertToEntity(ExchangeRateDto exchangeRateDto) {
         return modelMapper.map(exchangeRateDto, ExchangeRate.class);
-    }
-
-    public static ExchangeRateModelMapper getInstance() {
-        return INSTANCE;
     }
 }

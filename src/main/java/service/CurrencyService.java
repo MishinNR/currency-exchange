@@ -23,7 +23,7 @@ public class CurrencyService {
 
     private CurrencyService() {
         this.currencyDao = CurrencyDao.getInstance();
-        this.currencyModelMapper = CurrencyModelMapper.getInstance();
+        this.currencyModelMapper = new CurrencyModelMapper();
     }
 
     public List<CurrencyDto> findAll() throws DatabaseException {
