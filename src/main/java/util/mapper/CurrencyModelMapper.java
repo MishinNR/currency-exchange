@@ -6,17 +6,17 @@ import org.modelmapper.ModelMapper;
 
 
 public class CurrencyModelMapper {
-    private final ModelMapper modelMapper;
+    private static final ModelMapper MODEL_MAPPER;
 
-    public CurrencyModelMapper() {
-        this.modelMapper = new ModelMapper();
+    static {
+        MODEL_MAPPER = new ModelMapper();
     }
 
-    public CurrencyDto convertToDto(Currency currency) {
-        return modelMapper.map(currency, CurrencyDto.class);
+    public static CurrencyDto convertToDto(Currency currency) {
+        return MODEL_MAPPER.map(currency, CurrencyDto.class);
     }
 
-    public Currency convertToEntity(CurrencyDto currencyDto) {
-        return modelMapper.map(currencyDto, Currency.class);
+    public static Currency convertToEntity(CurrencyDto currencyDto) {
+        return MODEL_MAPPER.map(currencyDto, Currency.class);
     }
 }

@@ -19,17 +19,15 @@ public class CurrencyService {
     private static final CurrencyService INSTANCE = new CurrencyService();
 
     private final CurrencyDao currencyDao;
-    private final CurrencyModelMapper currencyModelMapper;
 
     private CurrencyService() {
         this.currencyDao = CurrencyDao.getInstance();
-        this.currencyModelMapper = new CurrencyModelMapper();
     }
 
     public List<CurrencyDto> findAll() throws DatabaseException {
         try {
             return currencyDao.findAll().stream()
-                    .map(currencyModelMapper::convertToDto)
+                    .map(CurrencyModelMapper::convertToDto)
                     .collect(toList());
         } catch (SQLException e) {
             throw new DatabaseException();
@@ -42,7 +40,7 @@ public class CurrencyService {
             if (currency.isEmpty()) {
                 throw new CurrencyNotFoundException();
             }
-            return currencyModelMapper.convertToDto(currency.get());
+            return CurrencyModelMapper.convertToDto(currency.get());
         } catch (SQLException e) {
             throw new DatabaseException();
         }
@@ -50,7 +48,7 @@ public class CurrencyService {
 
     public CurrencyDto save(Currency currency) throws DatabaseException, CurrencyAlreadyExistsException {
         try {
-            return currencyModelMapper.convertToDto(currencyDao.save(currency));
+            return CurrencyModelMapper.convertToDto(currencyDao.save(currency));
         } catch (SQLiteException e) {
             throw new CurrencyAlreadyExistsException();
         } catch (SQLException e) {

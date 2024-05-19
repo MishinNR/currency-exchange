@@ -19,17 +19,15 @@ public class ExchangeRateService {
     private static final ExchangeRateService INSTANCE = new ExchangeRateService();
 
     private final ExchangeRateDao exchangeRateDao;
-    private final ExchangeRateModelMapper exchangeRateModelMapper;
 
     private ExchangeRateService() {
         this.exchangeRateDao = ExchangeRateDao.getInstance();
-        this.exchangeRateModelMapper = new ExchangeRateModelMapper();
     }
 
     public List<ExchangeRateDto> findAll() throws DatabaseException {
         try {
             return exchangeRateDao.findAll().stream()
-                    .map(exchangeRateModelMapper::convertToDTO)
+                    .map(ExchangeRateModelMapper::convertToDTO)
                     .collect(toList());
         } catch (SQLException e) {
             throw new DatabaseException();
@@ -42,7 +40,7 @@ public class ExchangeRateService {
             if (exchangeRate.isEmpty()) {
                 throw new ExchangeRateNotFoundException();
             }
-            return exchangeRateModelMapper.convertToDTO(exchangeRate.get());
+            return ExchangeRateModelMapper.convertToDTO(exchangeRate.get());
         } catch (SQLException e) {
             throw new DatabaseException();
         }
@@ -50,7 +48,7 @@ public class ExchangeRateService {
 
     public ExchangeRateDto save(ExchangeRate exchangeRate) throws ExchangeRateAlreadyExistsException, DatabaseException {
         try {
-            return exchangeRateModelMapper.convertToDTO(exchangeRateDao.save(exchangeRate));
+            return ExchangeRateModelMapper.convertToDTO(exchangeRateDao.save(exchangeRate));
         } catch (SQLiteException e) {
             throw new ExchangeRateAlreadyExistsException();
         } catch (SQLException e) {
@@ -60,7 +58,7 @@ public class ExchangeRateService {
 
     public ExchangeRateDto update(ExchangeRate exchangeRate) throws DatabaseException {
         try {
-            return exchangeRateModelMapper.convertToDTO(exchangeRateDao.update(exchangeRate));
+            return ExchangeRateModelMapper.convertToDTO(exchangeRateDao.update(exchangeRate));
         } catch (SQLException e) {
             throw new DatabaseException();
         }

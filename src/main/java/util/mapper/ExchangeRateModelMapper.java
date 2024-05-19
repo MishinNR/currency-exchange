@@ -9,14 +9,14 @@ import util.NumberConverter;
 import java.util.Objects;
 
 public class ExchangeRateModelMapper {
-    private final ModelMapper modelMapper;
+    private static final ModelMapper MODEL_MAPPER;
 
-    public ExchangeRateModelMapper() {
-        this.modelMapper = new ModelMapper();
-        this.modelMapper.createTypeMap(ExchangeRate.class, ExchangeRateDto.class).setPostConverter(toDtoConverter());
+    static  {
+        MODEL_MAPPER = new ModelMapper();
+        MODEL_MAPPER.createTypeMap(ExchangeRate.class, ExchangeRateDto.class).setPostConverter(toDtoConverter());
     }
 
-    public Converter<ExchangeRate, ExchangeRateDto> toDtoConverter() {
+    private static Converter<ExchangeRate, ExchangeRateDto> toDtoConverter() {
         return context -> {
             ExchangeRate source = context.getSource();
             ExchangeRateDto destination = context.getDestination();
@@ -25,7 +25,7 @@ public class ExchangeRateModelMapper {
         };
     }
 
-    public void mapSpecificFields(ExchangeRate source, ExchangeRateDto destination) {
+    private static void mapSpecificFields(ExchangeRate source, ExchangeRateDto destination) {
         destination.setRate(
                 Objects.isNull(source) || Objects.isNull(source.getRate())
                         ? null
@@ -33,11 +33,11 @@ public class ExchangeRateModelMapper {
         );
     }
 
-    public ExchangeRateDto convertToDTO(ExchangeRate exchangeRate) {
-        return modelMapper.map(exchangeRate, ExchangeRateDto.class);
+    public static ExchangeRateDto convertToDTO(ExchangeRate exchangeRate) {
+        return MODEL_MAPPER.map(exchangeRate, ExchangeRateDto.class);
     }
 
-    public ExchangeRate convertToEntity(ExchangeRateDto exchangeRateDto) {
-        return modelMapper.map(exchangeRateDto, ExchangeRate.class);
+    public static ExchangeRate convertToEntity(ExchangeRateDto exchangeRateDto) {
+        return MODEL_MAPPER.map(exchangeRateDto, ExchangeRate.class);
     }
 }
